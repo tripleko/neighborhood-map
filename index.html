@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Los Angeles Landmarks</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 sidebar">
+                <form>
+                    <label>
+                        <input placeholder="Enter search" data-bind="textInput: searchTerm">
+                    </label>
+                </form>
+                <ul data-bind="foreach: filteredLocations">
+                    <li data-bind="text: name, click: displayInfo"></li>
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/knockout-3.3.0.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/main.min.js"></script>
+</body>
+</html>
