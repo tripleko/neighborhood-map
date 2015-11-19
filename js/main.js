@@ -86,7 +86,8 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 34.0914, lng: -118.293},
-        zoom: 11
+        zoom: 11,
+        disableDefaultUI: true
     });
 
     infowindow = new google.maps.InfoWindow({
