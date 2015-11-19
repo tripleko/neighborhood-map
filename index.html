@@ -12,24 +12,19 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-3 sidebar">
-                <form>
-                    <label>
-                        <input placeholder="Enter search" data-bind="textInput: searchTerm">
-                    </label>
-                </form>
-                <ul data-bind="foreach: filteredLocations">
-                    <li data-bind="text: name, click: displayInfo"></li>
-                </ul>
-            </div>
-            <div class="col-sm-12">
-                <div id="map"></div>
-            </div>
-        </div>
+    <div class="sidebar">
+        <form>
+            <label>
+                <input placeholder="Enter search" data-bind="textInput: searchTerm">
+            </label>
+        </form>
+        <ul data-bind="foreach: filteredLocations">
+            <li data-bind="text: name, click: displayInfo"></li>
+        </ul>
     </div>
 
+    <div id="map"></div>
+    
     <script src="js/knockout-3.3.0.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
     <script src="js/jquery-1.11.3.min.js"></script>
