@@ -30,7 +30,7 @@ function getWikiData(index, callback) {
         url: baseURL + arrayLocations[index].name,
         jsonp: "callback",
         dataType: "jsonp",
-        timeout: 10000,
+        timeout: 3000,
         success: function(res) {
             //Wikipedia returns a page number related to the article.
             //EX: res.query.pages.34234234
@@ -65,7 +65,6 @@ function initMarker(index) {
     marker.addListener('click', function() {
         getWikiData(index, function() {
             infowindow.setContent(arrayLocations[index].wikiData);
-            infowindow.setContent(arrayLocations[index].wikiData);
             infowindow.maxWidth = Math.floor($(window).width() / 2);
             infowindow.open(map, marker);
 
@@ -93,30 +92,13 @@ function initMap() {
     }
 }
 
-//Displays marker info when clicked on from list of place names.
-function displayInfo(placeObj) {
+//Function adds an index property to arrayLocations
+function initIndex() {
     "use strict";
 
-    //The i found is the location index in arrayLocations.
-    for(var i = 0; i < arrayLocations.length; i++) {
-        if(arrayLocations[i].name === placeObj.name) {
-            break;
-        }
+    for(var i; i < arrayLocations.length; i++) {
+        arrayLocations["index"] = i;
     }
-
-    getWikiData(i, function() {
-        infowindow.setContent(arrayLocations[i].wikiData);
-
-        for(i = 0; i < arrayMarkers.length; i++) {
-            if(arrayMarkers[i].title === placeObj.name) {
-                infowindow.maxWidth = Math.floor($(window).width() / 2);
-                infowindow.open(map, arrayMarkers[i]);
-                arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
-                break;
-            }
-        }
-        setTimeout(function(){ arrayMarkers[i].setAnimation(null); }, 750);
-    });
 }
 
 function AppViewModel() {
@@ -152,8 +134,34 @@ function AppViewModel() {
             }
         }
     }, this);
+
+    //Displays marker info when clicked on from list of place names.
+    this.displayInfo = function(placeObj) {
+        //The i found is the location index in arrayLocations.
+        for(var i = 0; i < arrayLocations.length; i++) {
+            if(arrayLocations[i].name === placeObj.name) {
+                break;
+            }
+        }
+
+        getWikiData(i, function() {
+            infowindow.setContent(arrayLocations[i].wikiData);
+
+            for(i = 0; i < arrayMarkers.length; i++) {
+                if(arrayMarkers[i].title === placeObj.name) {
+                    infowindow.maxWidth = Math.floor($(window).width() / 2);
+                    infowindow.open(map, arrayMarkers[i]);
+                    arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
+                    break;
+                }
+            }
+            setTimeout(function(){ arrayMarkers[i].setAnimation(null); }, 750);
+        });
+    };
 }
 
-ko.applyBindings(new AppViewModel());
+initIndex();
+window.mvvm = new AppViewModel();
+ko.applyBindings(mvvm);
 
 window.addEventListener('load', initMap);
