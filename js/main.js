@@ -92,12 +92,15 @@ function initMap() {
     }
 }
 
-//Function adds an index property to arrayLocations
+//Function adds an index property to arrayLocations to remove the need for some search loops.
+//The marker index will always equal the corresponding arrayLocations index.
+//Without this function, this index data gets lost when I store locations into the view model's
+//filteredLocations.
 function initIndex() {
     "use strict";
 
-    for(var i; i < arrayLocations.length; i++) {
-        arrayLocations["index"] = i;
+    for(var i = 0; i < arrayLocations.length; i++) {
+        arrayLocations[i].index = i;
     }
 }
 
@@ -120,7 +123,7 @@ function AppViewModel() {
         for(var i = 0; i < arrayMarkers.length; i++) {
             var found = false;
             for(var j = 0; j < this.filteredLocations().length; j++) {
-                if(arrayMarkers[i].title === this.filteredLocations()[j].name) {
+                if(i === this.filteredLocations()[j].index) {
                     found = true;
                     break;
                 }
@@ -137,25 +140,13 @@ function AppViewModel() {
 
     //Displays marker info when clicked on from list of place names.
     this.displayInfo = function(placeObj) {
-        //The i found is the location index in arrayLocations.
-        for(var i = 0; i < arrayLocations.length; i++) {
-            if(arrayLocations[i].name === placeObj.name) {
-                break;
-            }
-        }
+        getWikiData(placeObj.index, function() {
+            infowindow.setContent(arrayLocations[placeObj.index].wikiData);
+            infowindow.maxWidth = Math.floor($(window).width() / 2);
+            infowindow.open(map, arrayMarkers[placeObj.index]);
 
-        getWikiData(i, function() {
-            infowindow.setContent(arrayLocations[i].wikiData);
-
-            for(i = 0; i < arrayMarkers.length; i++) {
-                if(arrayMarkers[i].title === placeObj.name) {
-                    infowindow.maxWidth = Math.floor($(window).width() / 2);
-                    infowindow.open(map, arrayMarkers[i]);
-                    arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
-                    break;
-                }
-            }
-            setTimeout(function(){ arrayMarkers[i].setAnimation(null); }, 750);
+            arrayMarkers[placeObj.index].setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function(){ arrayMarkers[placeObj.index].setAnimation(null); }, 750);
         });
     };
 }
