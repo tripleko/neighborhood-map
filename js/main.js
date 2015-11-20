@@ -112,7 +112,7 @@
             }, this);
         }, this);
 
-        //Update marker visibility.
+        //Update marker visibility and close infowindow if open.
         this.filteredLocations.subscribe(function () {
             for (var i = 0; i < arrayMarkers.length; i++) {
                 var found = false;
@@ -130,6 +130,8 @@
                     arrayMarkers[i].setVisible(false);
                 }
             }
+
+            infowindow.close();
         }, this);
 
         //Displays marker info when clicked on from list of place names.
