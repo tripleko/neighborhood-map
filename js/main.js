@@ -18,7 +18,7 @@ var arrayMarkers = [];
 //http://stackoverflow.com/a/18505342
 
 //Takes value of index of arrayLocation as argument and adds wikiData at index.
-function getWikiData(index) {
+function getWikiData(index, callback) {
     "use strict";
 
     var baseURL = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json" + "" +
@@ -40,24 +40,14 @@ function getWikiData(index) {
             var pageNum = Object.keys(res.query.pages)[0];
 
             arrayLocations[index].wikiData = res.query.pages[pageNum].extract;
+            callback();
         },
         error: function() {
             arrayLocations[index].wikiData = "There was an error retrieving wiki data.";
             console.log("Error retrieving wiki data.");
+            callback();
         }
     });
-}
-
-//Made getWikiData seperate from this function to avoid problems with having a function inside a
-//loop as described in these links.
-//https://jslinterrors.com/dont-make-functions-within-a-loop
-//http://stackoverflow.com/a/2687739
-function initWikiData() {
-    "use strict";
-
-    for(var i = 0; i < arrayLocations.length; i++) {
-        getWikiData(i);
-    }
 }
 
 function initMarker(index) {
@@ -100,24 +90,30 @@ function initMap() {
 }
 
 //Displays marker info when clicked on from list of place names.
+//TODO: Handle getting info when clicking directly on the map without interacting with the list.
 function displayInfo(placeObj) {
     "use strict";
 
+    var locationIndex;
     for(var i = 0; i < arrayLocations.length; i++) {
         if(arrayLocations[i].name === placeObj.name) {
-            infowindow.setContent(arrayLocations[i].wikiData);
+            locationIndex = i;
             break;
         }
     }
 
-    for(i = 0; i < arrayMarkers.length; i++) {
-        if(arrayMarkers[i].title === placeObj.name) {
-            infowindow.open(map, arrayMarkers[i]);
-            arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
-            break;
+    getWikiData(locationIndex, function() {
+        infowindow.setContent(arrayLocations[i].wikiData);
+
+        for(i = 0; i < arrayMarkers.length; i++) {
+            if(arrayMarkers[i].title === placeObj.name) {
+                infowindow.open(map, arrayMarkers[i]);
+                arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
+                break;
+            }
         }
-    }
-    setTimeout(function(){ arrayMarkers[i].setAnimation(null); }, 750);
+        setTimeout(function(){ arrayMarkers[i].setAnimation(null); }, 750);
+    });
 }
 
 function AppViewModel() {
@@ -157,5 +153,4 @@ function AppViewModel() {
 
 ko.applyBindings(new AppViewModel());
 
-initWikiData();
 window.addEventListener('load', initMap);
