@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Los Angeles Landmarks</title>
@@ -12,7 +12,7 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
+    <aside class="sidebar">
         <form>
             <label>
                 <input id="search" placeholder="Enter search" data-bind="textInput: searchTerm">
@@ -21,9 +21,9 @@
         <ul data-bind="foreach: filteredLocations">
             <li data-bind="text: name, click: mvvm.displayInfo"></li>
         </ul>
-    </div>
+    </aside>
 
-    <div id="map"></div>
+    <section id="map"></section>
 
     <script src="js/knockout-3.3.0.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3" async></script>
