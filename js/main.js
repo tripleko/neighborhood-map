@@ -65,6 +65,8 @@ function initMarker(index) {
     marker.addListener('click', function() {
         getWikiData(index, function() {
             infowindow.setContent(arrayLocations[index].wikiData);
+            infowindow.setContent(arrayLocations[index].wikiData);
+            infowindow.maxWidth = Math.floor($(window).width() / 2);
             infowindow.open(map, marker);
 
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -83,8 +85,7 @@ function initMap() {
     });
 
     infowindow = new google.maps.InfoWindow({
-        content: "No data set yet.",
-        maxWidth: 1000
+        content: "No data set yet."
     });
 
     for(var i = 0; i < arrayLocations.length; i++) {
@@ -93,7 +94,6 @@ function initMap() {
 }
 
 //Displays marker info when clicked on from list of place names.
-//TODO: Handle getting info when clicking directly on the map without interacting with the list.
 function displayInfo(placeObj) {
     "use strict";
 
@@ -109,6 +109,7 @@ function displayInfo(placeObj) {
 
         for(i = 0; i < arrayMarkers.length; i++) {
             if(arrayMarkers[i].title === placeObj.name) {
+                infowindow.maxWidth = Math.floor($(window).width() / 2);
                 infowindow.open(map, arrayMarkers[i]);
                 arrayMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
                 break;
