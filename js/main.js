@@ -63,11 +63,13 @@ function initMarker(index) {
     arrayMarkers.push(marker);
 
     marker.addListener('click', function() {
-        infowindow.setContent(arrayLocations[index].wikiData);
-        infowindow.open(map, marker);
+        getWikiData(index, function() {
+            infowindow.setContent(arrayLocations[index].wikiData);
+            infowindow.open(map, marker);
 
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function(){ marker.setAnimation(null); }, 750);
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function(){ marker.setAnimation(null); }, 750);
+        });
     });
 }
 
@@ -81,7 +83,8 @@ function initMap() {
     });
 
     infowindow = new google.maps.InfoWindow({
-        content: "No data set yet."
+        content: "No data set yet.",
+        maxWidth: 1000
     });
 
     for(var i = 0; i < arrayLocations.length; i++) {
@@ -94,15 +97,14 @@ function initMap() {
 function displayInfo(placeObj) {
     "use strict";
 
-    var locationIndex;
+    //The i found is the location index in arrayLocations.
     for(var i = 0; i < arrayLocations.length; i++) {
         if(arrayLocations[i].name === placeObj.name) {
-            locationIndex = i;
             break;
         }
     }
 
-    getWikiData(locationIndex, function() {
+    getWikiData(i, function() {
         infowindow.setContent(arrayLocations[i].wikiData);
 
         for(i = 0; i < arrayMarkers.length; i++) {
